@@ -19,3 +19,15 @@ data$ArquivoVideo = as.character(data$ArquivoVideo)
 
 data$atividade = data$Saida + data$Entrada
 data$registro.hora = as.numeric(format(as.POSIXct(strptime(data$DataRegistro,"%Y-%m-%d %H:%M:%S",tz="")), format = "%H"))
+
+###
+
+source("functions/random.coordinate.R")
+
+set.seed(2468)
+
+dt = as.data.frame(t(mapply(random.coordinate, data$Latidute, data$Longitude)))
+colnames(dt) = c("Latitude_r", "Longitude_r")
+data = cbind(data, dt)
+
+remove(dt)

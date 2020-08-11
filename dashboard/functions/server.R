@@ -213,9 +213,9 @@ server = function(input, output) {
       setView(lng = -55, lat = -12, zoom = 3) %>%
       addTiles() %>%
       addCircles(data = rv$dt_species,
-                 lat = ~ Latidute,
-                 lng = ~ Longitude,
-                 radius = 2000,
+                 lat = ~ Latitude_r,
+                 lng = ~ Longitude_r,
+                 radius = 3000,
                  weight = 10,
                  color =  ~palette(AreaClass),
                  popup = paste("<b> Espécie:</b> ", rv$dt_species$Especie, "<br/>",
