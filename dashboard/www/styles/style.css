@@ -1,0 +1,27 @@
+body {
+  font-family: Verdana;
+}
+
+.info-box-number {
+  font-size: 30px;
+}
+
+.small-box .icon-large {
+  right: 15px;
+}
+
+.box {
+  border-top: none;
+  box-shadow: none;
+}
+
+.box1 .box {
+  background: rgba(255, 255, 255, 0);
+  border-top: none;
+  box-shadow: none;
+}
+
+.container-fluid {
+  padding-right: 0;
+  padding-left: 0;
+}
