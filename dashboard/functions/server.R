@@ -123,6 +123,15 @@ server = function(input, output) {
     )
   })
   
+  output$numberOfFilteredPolen = renderValueBox({
+    valueBox(
+      sum(rv$dt_species$Polen),
+      "Abelhas carregando pólen",
+      icon = icon("spa"),
+      color = "teal",
+    )
+  })
+  
   ###
   
   output$plot1 = renderPlot({

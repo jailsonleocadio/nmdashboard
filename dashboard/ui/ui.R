@@ -103,7 +103,9 @@ ui = fluidPage(
           fluidRow(
             box(
               selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
-            )
+            ),
+            
+            valueBoxOutput("numberOfFilteredPolen", width = 6)
           ),
           
           fluidRow(
