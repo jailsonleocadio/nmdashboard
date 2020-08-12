@@ -134,78 +134,89 @@ server = function(input, output) {
   
   ###
   
-  output$plot1 = renderPlot({
-    plot(rv$dt_species$registro.hora,
-         rv$dt_species$atividade,
-         pch=16,
-         xlab = "(Hora)",
-         ylab = "Saídas + entradas",
-         main = "Atividade das abelhas por horário"
-    )
+  output$plot1 = renderPlotly({
+    fig = plot_ly(type = "scatter")
+    fig = fig %>%
+      add_trace(data = rv$dt_species,
+                x = ~registro.hora, y = ~atividade,
+                text = ~paste("Espécie: ", Especie, '<br>Saídas: ', Saida, '<br>Entradas: ',
+                              Entrada, '<br>Temperatura: ', Temperatura, '<br>Condição do céu: ',
+                              CondicaoCeu, '<br>Área: ', AreaClass),
+                name = 'Contribuição',
+                mode = 'markers',
+                marker = list(size = 10,
+                              color = '#2c74b4'))
     
-    legend(min(rv$dt_species$registro.hora), max(rv$dt_species$atividade), legend=c("Média de atividade"), col=c("red"), lty=1, cex=1, lwd=4)
-    lines(aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean), col="red", lwd=4)
+    fig = fig %>%
+      add_trace(x = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean)$Group.1,
+                y = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean)$x,
+                name = 'Média de atividade',
+                mode = 'lines',
+                line = list(color = 'red'))
+    
+    fig = fig %>%
+      layout(xaxis = list(title = "(Hora)"),
+             yaxis = list (title = "Saídas + entradas"))
+
   })
   
-  output$plot2 = renderPlot({
-    plot(rv$dt_species$Temperatura,
-         rv$dt_species$atividade,
-         pch=16,
-         xlab = "(Temperatura ºC)",
-         ylab = "Saídas + entradas",
-         main = "Atividade das abelhas por temperatura"
-    )
-    
-    model = lm(atividade ~ poly(Temperatura, degree=1), data = rv$dt_species)
+  output$plot2 = renderPlotly({
+    fig = plot_ly(type = "scatter")
+    fig = fig %>%
+      add_trace(data = rv$dt_species,
+                x = ~Temperatura, y = ~atividade,
+                text = ~paste("Espécie: ", Especie, '<br>Saídas: ', Saida, '<br>Entradas: ',
+                              Entrada, '<br>Temperatura: ', Temperatura, '<br>Condição do céu: ',
+                              CondicaoCeu, '<br>Área: ', AreaClass),
+                name = "Contribuição",
+                mode = 'markers',
+                marker = list(size = 10,
+                              color = '#2c74b4'))
+
+    model = lm(atividade ~ poly(Temperatura, degree=2), data = rv$dt_species)
     
     x = with(rv$dt_species, seq(min(Temperatura), max(Temperatura), length.out=2000))
     y = predict(model, newdata = data.frame(Temperatura = x))
     
-    lines(x, y, col = "red", lwd=4)
-    legend(min(rv$dt_species$Temperatura), max(rv$dt_species$atividade), legend=c("Linha de tendência"), col=c("red"), lty=1, cex=1, lwd=4)
+    fig = fig %>%
+      add_trace(x = x,
+                y = y,
+                name = 'Linha de tendência',
+                mode = 'lines',
+                line = list(color = 'red'))
+    
+    fig = fig %>%
+      layout(xaxis = list(title = "(Temperatura ºC)"),
+             yaxis = list (title = "Saídas + entradas"))
   })
   
-  output$plot3 = renderPlot({
+  output$plot3 = renderPlotly({
     agg = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$CondicaoCeu), mean)
     vt = agg$x
     names(vt) = as.character(agg$Group.1)
     vt = c(vt["Chuva fraca"], vt["Coberto por nuvens de chuva/nublado"], vt["Parcialmente coberto por nuvens"], vt["Céu aberto sem nuvens"])
     
-    plot = barplot(vt,
-            col = "#75AADB",
-            border = "white",
-            xlab = "Condição do céu",
-            ylab = "Média de atividade (entrada + saída)",
-            ylim=c(0, (ceiling(max(vt)) + 1)),
-            main = "Atividade das abelhas por condição do céu"
-    )
-    
-    text(x=plot, y=vt, labels=as.character(round(vt, 1)), pos=3)
+    fig = plot_ly(x = names(vt), y = vt, type = 'bar', name = 'SF Zoo',
+                  text = round(vt, 1), textposition = 'auto')
+    fig = fig %>%
+      layout(yaxis = list(title = 'Média de atividade (saídas + entradas)'))
   })
   
-  output$plot4 = renderPlot({
+  output$plot4 = renderPlotly({
     agg1 = aggregate(rv$dt_species$Entrada, by=list(rv$dt_species$registro.hora), mean)
-    agg2 = aggregate(rv$dt_species$Pole, by=list(rv$dt_species$registro.hora), mean)
-
-    mt = t(matrix(c(agg1$x, agg2$x), ncol=2))
+    agg2 = aggregate(rv$dt_species$Polen, by=list(rv$dt_species$registro.hora), mean)
     
-    plot = barplot(mt,
-                   beside=T,
-                   col = c("#75AADB","coral"),
-                   border = "white",
-                   ylim=c(0, (ceiling(max(mt)) + 2)),
-                   names.arg = agg1$Group.1,
-                   xlab = "(Hora)",
-                   main = "Média de pólen na entrada"
-    )
-    
-    text(x=plot, y=mt, labels=gsub("^0$", "", as.character(round(mt, 1))), pos=3)
-    legend(1, max(mt)+2, legend=c("Entrada", "Entrada com pólen"), col=c("#75AADB","coral"), pch=15)
+    fig = plot_ly(x = agg1$Group.1, y = agg1$x, type = 'bar', name = 'Entrada',
+                  text = round(agg1$x, 1), textposition = 'auto')
+    fig = fig %>% add_trace(y = agg2$x, name = 'Pólen',
+                            text = round(agg2$x, 1), textposition = 'auto')
+    fig = fig %>%
+      layout(yaxis = list(title = 'Média de atividade (saídas + entradas)'))
   })
   
   output$map = renderLeaflet({
     palette = colorFactor(
-      palette = c('yellow', 'green', 'red'),
+      palette = c("#66C2A5", "#FC8D62", "#8DA0CB"),
       domain = rv$dt_species$AreaClass
     )
     

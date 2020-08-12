@@ -17,6 +17,11 @@ if (!require(leaflet)) {
   library(leaflet)
 }
 
+if (!require(plotly)) {
+  install.packages("plotly")
+  library(plotly)
+}
+
 source("database/database.R")
 source("functions/server.R")
 source("ui/ui.R")

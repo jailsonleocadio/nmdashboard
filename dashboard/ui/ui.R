@@ -110,10 +110,10 @@ ui = fluidPage(
           
           fluidRow(
             tabBox(id = "tabset1", width = 12,
-              tabPanel("Atividade por horário", plotOutput("plot1")),
-              tabPanel("Atividade por temperatura", plotOutput("plot2")),
-              tabPanel("Atividade por condição do céu", plotOutput("plot3")),
-              tabPanel("Pólen por entrada", plotOutput("plot4"))
+              tabPanel("Atividade por horário", plotlyOutput("plot1")),
+              tabPanel("Atividade por temperatura", plotlyOutput("plot2")),
+              tabPanel("Atividade por condição do céu", plotlyOutput("plot3")),
+              tabPanel("Pólen por entrada", plotlyOutput("plot4"))
             )
           ),
           
