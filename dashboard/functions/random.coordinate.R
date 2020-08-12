@@ -1,4 +1,4 @@
-random.coordinate = function(latitude, longitude, min_distance = 0, max_distance = 5000) {
+random.coordinate = function(latitude, longitude, min_distance = 100, max_distance = 10000) {
   lat = latitude * pi / 180
   lon = longitude * pi / 180
   
