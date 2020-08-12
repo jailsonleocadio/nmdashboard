@@ -1,4 +1,4 @@
-data = read.csv("database/data.csv", header=TRUE, sep=";")
+data = read.csv("database/data.csv", header=TRUE, sep=",")
 
 data$DataCriacao = as.POSIXct(strptime(data$DataCriacao,"%Y-%m-%d %H:%M:%S", tz=""))
 data$Email = as.character(data$Email)
