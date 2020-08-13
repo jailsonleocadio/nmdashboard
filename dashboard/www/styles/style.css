@@ -7,7 +7,10 @@ body {
 }
 
 .small-box .icon-large {
+  top: 0;
+  bottom: auto;
   right: 15px;
+  font-size: 50px;
 }
 
 .box {
@@ -24,4 +27,8 @@ body {
 .container-fluid {
   padding-right: 0;
   padding-left: 0;
+}
+
+.small-box .icon-large {
+
 }

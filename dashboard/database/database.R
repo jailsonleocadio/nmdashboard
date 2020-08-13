@@ -7,7 +7,10 @@ data$Temperatura = as.numeric(data$Temperatura)
 data$Experiencia = as.factor(data$Experiencia)
 data$Especie = as.factor(data$Especie)
 data$FezCurso = as.factor(data$FezCurso)
+
 data$CondicaoCeu = as.factor(data$CondicaoCeu)
+data$CondicaoCeu = factor(data$CondicaoCeu, levels = c("Chuva fraca", "Coberto por nuvens de chuva/nublado", "Parcialmente coberto por nuvens", "Céu aberto sem nuvens"))
+
 data$IdentificadorNinho = as.character(data$IdentificadorNinho)
 data$AreaClass = as.factor(data$AreaClass)
 data$Saida = as.numeric(data$Saida)

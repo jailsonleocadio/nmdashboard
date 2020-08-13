@@ -41,7 +41,7 @@ ui = fluidPage(
                 "<td style='padding: 5px;'><a href='https://www.facebook.com/beekeep.life' target='_blank'><i class='fab fa-facebook-square fa-lg'></i></a></td>",
                 "<td style='padding: 5px;'><a href='https://www.instagram.com/beekeep.life' target='_blank'><i class='fab fa-instagram fa-lg'></i></a></td>",
                 "<td style='padding: 5px;'><a href='https://www.twitter.com/BeekeepL' target='_blank'><i class='fab fa-twitter fa-lg'></i></a></td>",
-                "<td style='padding: 5px;'><a href='https://www.youtube.com/UChJe2qL4h1Sr0Q-k4RsWyfQ' target='_blank'><i class='fab fa-youtube fa-lg'></i></a></td>",
+                "<td style='padding: 5px;'><a href='https://www.youtube.com/channel/UChJe2qL4h1Sr0Q-k4RsWyfQ' target='_blank'><i class='fab fa-youtube fa-lg'></i></a></td>",
               "</tr>",
             "</table>",
             "<br>"
@@ -96,8 +96,11 @@ ui = fluidPage(
             ),
 
             valueBoxOutput("numberOfFilteredObservations", width = 6),
-            valueBoxOutput("numberOfFilteredScientists", width = 6),
-            valueBoxOutput("numberOfFilteredBees", width = 6)
+            valueBoxOutput("numberOfFilteredScientists", width = 3),
+            valueBoxOutput("numberOfFilteredBees", width = 3),
+            valueBoxOutput("numberOfFilteredPolen", width = 3),
+            valueBoxOutput("meanOfBees", width = 3)
+            
           ),
           
           fluidRow(
@@ -105,7 +108,8 @@ ui = fluidPage(
               selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
             ),
             
-            valueBoxOutput("numberOfFilteredPolen", width = 6)
+            valueBoxOutput("rateOfPolen", width = 3),
+            valueBoxOutput("meanOfTemperature", width = 3)
           ),
           
           fluidRow(

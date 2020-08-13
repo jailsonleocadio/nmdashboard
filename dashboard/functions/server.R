@@ -132,6 +132,33 @@ server = function(input, output) {
     )
   })
   
+  output$meanOfBees = renderValueBox({
+    valueBox(
+      round(mean(rv$dt_species$atividade), 1),
+      "Média de atividade",
+      icon = icon("forumbee"),
+      color = "teal",
+    )
+  })
+  
+  output$rateOfPolen = renderValueBox({
+    valueBox(
+      paste(round((sum(rv$dt_species$Polen)/sum(rv$dt_species$Entrada) * 100), 1), "%"),
+      "Polén/Entrada",
+      icon = icon("spa"),
+      color = "teal",
+    )
+  })
+  
+  output$meanOfTemperature = renderValueBox({
+    valueBox(
+      paste(round(mean(rv$dt_species$Temperatura), 1), " ºC"),
+      "Média de temperatura",
+      icon = icon("thermometer-three-quarters"),
+      color = "teal",
+    )
+  })
+  
   ###
   
   output$plot1 = renderPlotly({
@@ -172,16 +199,11 @@ server = function(input, output) {
                 mode = 'markers',
                 marker = list(size = 10,
                               color = '#2c74b4'))
-
-    model = lm(atividade ~ poly(Temperatura, degree=2), data = rv$dt_species)
-    
-    x = with(rv$dt_species, seq(min(Temperatura), max(Temperatura), length.out=2000))
-    y = predict(model, newdata = data.frame(Temperatura = x))
     
     fig = fig %>%
-      add_trace(x = x,
-                y = y,
-                name = 'Linha de tendência',
+      add_trace(x = aggregate(rv$dt_species$atividade, by=list(floor(rv$dt_species$Temperatura)), mean)$Group.1,
+                y = aggregate(rv$dt_species$atividade, by=list(floor(rv$dt_species$Temperatura)), mean)$x,
+                name = 'Média de atividade',
                 mode = 'lines',
                 line = list(color = 'red'))
     
@@ -192,12 +214,11 @@ server = function(input, output) {
   
   output$plot3 = renderPlotly({
     agg = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$CondicaoCeu), mean)
-    vt = agg$x
-    names(vt) = as.character(agg$Group.1)
-    vt = c(vt["Chuva fraca"], vt["Coberto por nuvens de chuva/nublado"], vt["Parcialmente coberto por nuvens"], vt["Céu aberto sem nuvens"])
-    
-    fig = plot_ly(x = names(vt), y = vt, type = 'bar', name = 'SF Zoo',
-                  text = round(vt, 1), textposition = 'auto')
+    df = data.frame(agg$Group.1, agg$x)
+    df$agg.Group.1 = factor(df$agg.Group.1, levels = df[["agg.Group.1"]])
+
+    fig = plot_ly(data=df, x = ~agg.Group.1, y = ~agg.x, type = 'bar',
+                  text = round(df$agg.x, 1), textposition = 'auto')
     fig = fig %>%
       layout(yaxis = list(title = 'Média de atividade (saídas + entradas)'))
   })
@@ -235,7 +256,7 @@ server = function(input, output) {
       addCircles(data = rv$dt_species,
                  lat = ~ Latitude_r,
                  lng = ~ Longitude_r,
-                 radius = 6000,
+                 radius = 10000,
                  weight = 10,
                  color =  ~palette(AreaClass),
                  popup = paste("<b> Espécie:</b> ", rv$dt_species$Especie, "<br/>",

@@ -1,6 +1,6 @@
 FROM openanalytics/r-base
 
-RUN R -e "install.packages(c('shiny', 'rmarkdown', 'shinydashboard', 'leaflet'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('shiny', 'rmarkdown', 'shinydashboard', 'leaflet', 'plotly'), repos='https://cloud.r-project.org/')"
 
 RUN mkdir /root/app
 
