@@ -17,8 +17,18 @@ if (!require(leaflet)) {
   library(leaflet)
 }
 
+if (!require(ggplot2)) {
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+
+if (!require(devtools)) {
+  install.packages("devtools")
+  library(devtools)
+}
+
 if (!require(plotly)) {
-  install.packages("plotly")
+  devtools::install_github("ropensci/plotly")
   library(plotly)
 }
 

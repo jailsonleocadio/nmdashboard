@@ -1,6 +1,14 @@
 FROM openanalytics/r-base
 
-RUN R -e "install.packages(c('shiny', 'rmarkdown', 'shinydashboard', 'leaflet', 'plotly'), repos='https://cloud.r-project.org/')"
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  libcurl4-gnutls-dev \
+  libxml2-dev \
+  libssl-dev
+
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'leaflet', 'ggplot2', 'devtools'), repos='https://cloud.r-project.org/')"
+
+RUN R -e "devtools::install_github('ropensci/plotly')"
 
 RUN mkdir /root/app
 
