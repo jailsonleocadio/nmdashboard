@@ -1,5 +1,5 @@
 ui = fluidPage(
-  
+  tags$head(includeHTML(("www/google-analytics.html"))),
   includeCSS("www/styles/style.css"),
     
   tags$style(type = "text/css",

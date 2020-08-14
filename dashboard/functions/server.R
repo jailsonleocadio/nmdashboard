@@ -220,7 +220,8 @@ server = function(input, output) {
     fig = plot_ly(data=df, x = ~agg.Group.1, y = ~agg.x, type = 'bar',
                   text = round(df$agg.x, 1), textposition = 'auto')
     fig = fig %>%
-      layout(yaxis = list(title = 'Média de atividade (saídas + entradas)'))
+      layout(yaxis = list(title = 'Média de atividade (saídas + entradas)'),
+             xaxis = list(title = ''))
   })
   
   output$plot4 = renderPlotly({
@@ -232,7 +233,7 @@ server = function(input, output) {
     fig = fig %>% add_trace(y = agg2$x, name = 'Pólen',
                             text = round(agg2$x, 1), textposition = 'auto')
     fig = fig %>%
-      layout(yaxis = list(title = 'Média de atividade (saídas + entradas)'))
+      layout(yaxis = list(title = 'Média de Entradas'))
   })
   
   output$map = renderLeaflet({
