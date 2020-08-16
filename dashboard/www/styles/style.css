@@ -10,7 +10,7 @@ body {
   top: 0;
   bottom: auto;
   right: 15px;
-  font-size: 50px;
+  font-size: 40px;
 }
 
 .box {
@@ -27,4 +27,8 @@ body {
 .container-fluid {
   padding-right: 0;
   padding-left: 0;
+}
+
+.bg-teal {
+  background-color: #cc8b39!important;
 }

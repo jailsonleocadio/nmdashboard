@@ -25,81 +25,10 @@ server = function(input, output) {
   
   ###
   
-  output$numberOfObservations = renderValueBox({
-    valueBox(
-      nrow(data),
-      "Total de contribuições",
-      icon = icon("list"),
-      color = "teal"
-    )
-  })
-  
-  output$numberOfScientists = renderInfoBox({
-    infoBox(
-      "Cientistas cidadãos",
-      length(unique(data$Email)),
-      icon = icon("users"),
-      color = "blue",
-      fill = FALSE
-    )
-  })
-  
-  output$numberOfSpecies = renderInfoBox({
-    infoBox(
-      "Espécies estudadas",
-      length(unique(data$Especie))-1,
-      icon = icon("forumbee"),
-      color = "yellow",
-      fill = FALSE
-    )
-  })
-  
-  output$numberOfNests = renderInfoBox({
-    infoBox(
-      "Ninhos",
-      nrow(unique(data.frame(data$Email, data$IdentificadorNinho))),
-      icon = icon("forumbee"),
-      color = "yellow",
-      fill = FALSE
-    )
-  })
-  
-  output$numberOfExits = renderInfoBox({
-    infoBox(
-      "Abelhas saindo do ninho",
-      sum(data$Saida),
-      icon = icon("forumbee"),
-      color = "yellow",
-      fill = TRUE
-    )
-  })
-  
-  output$numberOfEntries = renderInfoBox({
-    infoBox(
-      "Abelhas entrando no ninho",
-      sum(data$Entrada),
-      icon = icon("forumbee"),
-      color = "yellow",
-      fill = TRUE
-    )
-  })
-  
-  output$numberOfPollen = renderInfoBox({
-    infoBox(
-      "Abelhas com pólen",
-      sum(data$Polen),
-      icon = icon("forumbee"),
-      color = "yellow",
-      fill = TRUE
-    )
-  })
-  
-  ###
-  
   output$numberOfFilteredObservations = renderValueBox({
     valueBox(
       nrow(rv$dt_species),
-      "Total de contribuições",
+      "Contribuições",
       icon = icon("list"),
       color = "teal"
     )
@@ -126,7 +55,7 @@ server = function(input, output) {
   output$numberOfFilteredPolen = renderValueBox({
     valueBox(
       sum(rv$dt_species$Polen),
-      "Abelhas carregando pólen",
+      "Com pólen",
       icon = icon("spa"),
       color = "teal",
     )
