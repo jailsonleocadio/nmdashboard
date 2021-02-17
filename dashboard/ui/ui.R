@@ -1,11 +1,6 @@
 ui = fluidPage(
   #tags$head(includeHTML(("www/google-analytics.html"))),
   includeCSS("www/styles/style.css"),
-    
-  tags$style(type = "text/css",
-    ".shiny-output-error { visibility: hidden; }",
-    ".shiny-output-error:before { visibility: hidden; }"
-  ),
   
   dashboardPage(
     skin = "yellow",
@@ -13,7 +8,19 @@ ui = fluidPage(
     dashboardHeader(
       title = "Monitoramento de ninhos",
       titleWidth = 300,
-      disable = FALSE
+      disable = FALSE,
+      tags$li(class = "dropdown",
+              tags$a(href = "https://www.facebook.com/beekeep.life", target="_blank", HTML(paste("<i class='fab fa-facebook-square fa-lg'></i>")))
+      ),
+      tags$li(class = "dropdown",
+              tags$a(href = "https://www.instagram.com/beekeep.life", target="_blank", HTML(paste("<i class='fab fa-instagram fa-lg'></i>")))
+      ),
+      tags$li(class = "dropdown",
+              tags$a(href = "https://www.twitter.com/BeekeepL", target="_blank", HTML(paste("<i class='fab fa-twitter fa-lg'></i>")))
+      ),
+      tags$li(class = "dropdown",
+              tags$a(href = "https://www.youtube.com/channel/UChJe2qL4h1Sr0Q-k4RsWyfQ", target="_blank", HTML(paste("<i class='fab fa-youtube fa-lg'></i>")))
+      )
     ),
     
     dashboardSidebar(
@@ -22,34 +29,46 @@ ui = fluidPage(
     
     dashboardBody(
       fluidRow(
-        valueBoxOutput("numberOfFilteredObservations", width = 2),
-        valueBoxOutput("numberOfFilteredScientists", width = 2),
-        valueBoxOutput("numberOfFilteredBees", width = 2),
-        valueBoxOutput("meanOfBees", width = 2),
-        valueBoxOutput("numberOfFilteredPolen", width = 2),
-        valueBoxOutput("rateOfPolen", width = 2),
-      ),
-      
-      fluidRow(class=c(""),
-        box(width = 3,
-          selectInput("species", "Espécie:", c("Todas", unique(as.character(data$Especie[order(data$Especie)])))),
+        column(4,
+               HTML(
+                 paste0(
+                   "<br>",
+                   "<img style = 'display: block;' src='images/beekeep.jpeg' width = '100'>",
+                   "<br>",
+                   "<p style = 'text-align: center;'><small>Nest Monitoring Dashboard</small></p>",
+                   "<br>"
+                   )
+                 )
+               ),
+        column(8, class=c("valuesbox"),
+               valueBoxOutput("numberOfFilteredObservations", width = 3),
+               valueBoxOutput("numberOfFilteredScientists", width = 3),
+               valueBoxOutput("numberOfFilteredBees", width = 3),
+               valueBoxOutput("meanOfBees", width = 3),
+               valueBoxOutput("numberOfFilteredPolen", width = 3),
+               valueBoxOutput("rateOfPolen", width = 3)
+               )
         ),
-        box(width = 3,
+      
+      fluidRow(class=c("colorbox"),
+        box(width = 12,
+          column(3,
+            selectInput("species", "Espécie:", c("Todas", unique(as.character(data$Especie[order(data$Especie)]))), multiple = TRUE),
             sliderInput("temperature",
                         "Temperatura:",
                         min=floor(min(data$Temperatura)),
                         max=ceiling(max(data$Temperatura)),
                         value=c(floor(min(data$Temperatura)), ceiling(max(data$Temperatura))),
-                        step = 0.5)),
-        box(width = 3,
-            selectInput("weather", "Condição do céu:", c("Todas", unique(as.character(data$CondicaoCeu[order(data$CondicaoCeu)]))))
-        ),
-        box(width = 3,
-            selectInput("area", "Área:", c("Todas", unique(as.character(data$AreaClass[order(data$AreaClass)]))))
-        ),
-        box(width = 3,
-            selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
-        ),
+                        step = 0.5),
+                    ),
+          column(3,
+                 selectInput("weather", "Condição do céu:", c("Todas", unique(as.character(data$CondicaoCeu[order(data$CondicaoCeu)])))),
+                 selectInput("area", "Área:", c("Todas", unique(as.character(data$AreaClass[order(data$AreaClass)]))))        ),
+          column(3,
+                 dateRangeInput("dates", "Período:", start = as.Date("2020-07-23"), end = Sys.Date(), separator = "até", format = "dd-mm-yyyy"),
+                 selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
+          )
+        )
       ),
         
       fluidRow(
@@ -63,6 +82,10 @@ ui = fluidPage(
         
       fluidRow(
         box(leafletOutput(outputId = "map"), width = 12)
+      ),
+      
+      fluidRow(
+        div(actionButton("action", "Sobre"), style = "text-align: center")
       )
     )
   )

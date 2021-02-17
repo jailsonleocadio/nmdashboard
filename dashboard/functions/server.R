@@ -4,9 +4,13 @@ server = function(input, output) {
   observeEvent(c(input$species, input$weather, input$area, input$experience, input$temperature), {
     rv$dt_species = data
     
-    if (input$species != "Todas") {
-      rv$dt_species = rv$dt_species[rv$dt_species$Especie==input$species,]
+    if (!is.null(input$species)) {
+      if (!"Todas" %in% input$species) {
+        rv$dt_species = rv$dt_species[rv$dt_species$Especie %in% input$species,]
+      }
     }
+    
+    rv$dt_species = rv$dt_species[rv$dt_species$Temperatura >= input$temperature[1] & rv$dt_species$Temperatura <= input$temperature[2],]
     
     if (input$weather != "Todas") {
       rv$dt_species = rv$dt_species[rv$dt_species$CondicaoCeu==input$weather,]
@@ -16,11 +20,11 @@ server = function(input, output) {
       rv$dt_species = rv$dt_species[rv$dt_species$AreaClass==input$area,]
     }
     
+    rv$dt_species = rv$dt_species[as.Date(rv$dt_species$DataRegistro) >= as.Date(input$dates[1]) & as.Date(rv$dt_species$DataRegistro) <= as.Date(input$dates[2]),]
+    
     if (input$experience != "Todas") {
       rv$dt_species = rv$dt_species[rv$dt_species$Experiencia==input$experience,]
     }
-    
-    rv$dt_species = rv$dt_species[rv$dt_species$Temperatura >= input$temperature[1] & rv$dt_species$Temperatura <= input$temperature[2],]
   })
   
   ###

@@ -1,10 +1,12 @@
-body {
-  font-family: Verdana;
-}
+body { font-family: Verdana; }
 
-.info-box-number {
-  font-size: 30px;
-}
+.shiny-output-error { visibility: hidden; }
+
+.shiny-output-error:before { visibility: hidden; }
+
+.content-wrapper, .right-side { background-color: #ffffff; }
+
+.info-box-number { font-size: 30px; }
 
 .small-box .icon-large {
   top: 0;
@@ -18,10 +20,8 @@ body {
   box-shadow: none;
 }
 
-.box1 .box {
-  background: rgba(255, 255, 255, 0);
-  border-top: none;
-  box-shadow: none;
+.colorbox .box {
+  background: rgb(235, 235, 235);
 }
 
 .container-fluid {
@@ -29,6 +29,10 @@ body {
   padding-left: 0;
 }
 
-.bg-teal {
-  background-color: #cc8b39!important;
+.bg-teal { background-color: #cc8b39!important; }
+
+.valuesbox, .shiny-html-output {
+  padding-left: 0;
 }
+
+.nav-tabs-custom { box-shadow: none; }
