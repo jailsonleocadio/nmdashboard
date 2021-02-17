@@ -1,7 +1,7 @@
 server = function(input, output) {
   rv = reactiveValues(dt_species = data)
   
-  observeEvent(c(input$species, input$weather, input$area, input$experience, input$temperature), {
+  observeEvent(c(input$species, input$temperature, input$weather, input$area, input$dates, input$experience), {
     rv$dt_species = data
     
     if (!is.null(input$species)) {
