@@ -1,7 +1,7 @@
 server = function(input, output) {
-  rv = reactiveValues(dt_species = data)
+  rv = reactiveValues(dt_species = data, dt_user = NULL)
   
-  observeEvent(c(input$species, input$temperature, input$weather, input$area, input$dates, input$experience), {
+  observeEvent(c(input$species, input$temperature, input$weather, input$area, input$dates, input$experience, input$email), {
     rv$dt_species = data
     
     if (!is.null(input$species)) {
@@ -24,6 +24,12 @@ server = function(input, output) {
     
     if (input$experience != "Todas") {
       rv$dt_species = rv$dt_species[rv$dt_species$Experiencia==input$experience,]
+    }
+    
+    if (trimws(input$email) != "") {
+      rv$dt_user = rv$dt_species
+      rv$dt_user = rv$dt_user[rv$dt_user$Email==trimws(input$email),]
+      print(nrow(rv$dt_user))
     }
   })
   
@@ -74,9 +80,18 @@ server = function(input, output) {
     )
   })
   
+  output$rateOfEntranceExit = renderValueBox({
+    valueBox(
+      paste(round((sum(rv$dt_species$Entrada)/sum(rv$dt_species$Saida, rv$dt_species$Entrada) * 100), 1), "%"),
+      "Entrada/Atividade",
+      icon = icon("forumbee"),
+      color = "teal",
+    )
+  })
+  
   output$rateOfPolen = renderValueBox({
     valueBox(
-      paste(round((sum(rv$dt_species$Polen)/sum(rv$dt_species$Entrada) * 100), 1), "%"),
+      paste(round((sum(rv$dt_species$Polen)/sum(rv$dt_species$Entrada, rv$dt_species$Polen) * 100), 1), "%"),
       "Polén/Entrada",
       icon = icon("spa"),
       color = "teal",
@@ -97,7 +112,7 @@ server = function(input, output) {
   output$plot1 = renderPlotly({
     fig = plot_ly(type = "scatter")
     fig = fig %>%
-      add_trace(data = rv$dt_species,
+      add_trace(data = rv$dt_species[rv$dt_species$Email != input$email,],
                 x = ~registro.hora, y = ~atividade,
                 text = ~paste("Espécie: ", Especie, '<br>Saídas: ', Saida, '<br>Entradas: ',
                               Entrada, '<br>Temperatura: ', Temperatura, '<br>Condição do céu: ',
@@ -106,6 +121,16 @@ server = function(input, output) {
                 mode = 'markers',
                 marker = list(size = 10,
                               color = '#2c74b4'))
+    
+    fig = fig %>%
+      add_trace(x = rv$dt_user$registro.hora, y = rv$dt_user$atividade,
+                text = paste("Espécie: ", rv$dt_user$Especie, '<br>Saídas: ', rv$dt_user$Saida, '<br>Entradas: ',
+                             rv$dt_user$Entrada, '<br>Temperatura: ',rv$dt_user$ Temperatura, '<br>Condição do céu: ',
+                             rv$dt_user$CondicaoCeu, '<br>Área: ', rv$dt_user$AreaClass),
+                name = 'Sua contribuição :)',
+                mode = 'markers',
+                marker = list(size = 10,
+                              color = 'yellow'))
     
     fig = fig %>%
       add_trace(x = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean)$Group.1,
@@ -123,7 +148,7 @@ server = function(input, output) {
   output$plot2 = renderPlotly({
     fig = plot_ly(type = "scatter")
     fig = fig %>%
-      add_trace(data = rv$dt_species,
+      add_trace(data = rv$dt_species[rv$dt_species$Email != input$email,],
                 x = ~Temperatura, y = ~atividade,
                 text = ~paste("Espécie: ", Especie, '<br>Saídas: ', Saida, '<br>Entradas: ',
                               Entrada, '<br>Temperatura: ', Temperatura, '<br>Condição do céu: ',
@@ -132,6 +157,16 @@ server = function(input, output) {
                 mode = 'markers',
                 marker = list(size = 10,
                               color = '#2c74b4'))
+    
+    fig = fig %>%
+      add_trace(x = rv$dt_user$Temperatura, y = rv$dt_user$atividade,
+                text = paste("Espécie: ", rv$dt_userEspecie, '<br>Saídas: ', rv$dt_userSaida, '<br>Entradas: ',
+                              rv$dt_userEntrada, '<br>Temperatura: ', rv$dt_userTemperatura, '<br>Condição do céu: ',
+                              rv$dt_userCondicaoCeu, '<br>Área: ', rv$dt_userAreaClass),
+                name = "Sua contribuição :)",
+                mode = 'markers',
+                marker = list(size = 10,
+                              color = 'Yellow'))
     
     fig = fig %>%
       add_trace(x = aggregate(rv$dt_species$atividade, by=list(floor(rv$dt_species$Temperatura)), mean)$Group.1,

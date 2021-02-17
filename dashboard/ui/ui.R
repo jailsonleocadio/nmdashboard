@@ -45,14 +45,16 @@ ui = fluidPage(
                valueBoxOutput("numberOfFilteredScientists", width = 3),
                valueBoxOutput("numberOfFilteredBees", width = 3),
                valueBoxOutput("meanOfBees", width = 3),
+               valueBoxOutput("rateOfEntranceExit", width = 3),
                valueBoxOutput("numberOfFilteredPolen", width = 3),
-               valueBoxOutput("rateOfPolen", width = 3)
+               valueBoxOutput("rateOfPolen", width = 3),
+               valueBoxOutput("meanOfTemperature", width = 3)
                )
         ),
       
       fluidRow(class=c("colorbox"),
-        box(width = 12,
-          column(3,
+        box(width = 8,
+          column(4,
             selectInput("species", "Espécie:", c("Todas", unique(as.character(data$Especie[order(data$Especie)]))), multiple = TRUE),
             sliderInput("temperature",
                         "Temperatura:",
@@ -61,12 +63,17 @@ ui = fluidPage(
                         value=c(floor(min(data$Temperatura)), ceiling(max(data$Temperatura))),
                         step = 0.5),
                     ),
-          column(3,
+          column(4,
                  selectInput("weather", "Condição do céu:", c("Todas", unique(as.character(data$CondicaoCeu[order(data$CondicaoCeu)])))),
                  selectInput("area", "Área:", c("Todas", unique(as.character(data$AreaClass[order(data$AreaClass)]))))        ),
-          column(3,
+          column(4,
                  dateRangeInput("dates", "Período:", start = as.Date("2020-07-23"), end = Sys.Date(), separator = "até", format = "dd-mm-yyyy"),
                  selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
+          ),
+        ),
+        box(width = 4,
+          column(12,
+               textInput("email", "Para ver as suas contribuições em destaque, digite o seu e-mail abaixo:")
           )
         )
       ),
@@ -85,7 +92,13 @@ ui = fluidPage(
       ),
       
       fluidRow(
-        div(actionButton("action", "Sobre"), style = "text-align: center")
+        column(4,
+               
+        )
+      ),
+      
+      fluidRow(
+        div(actionButton("about", "Sobre"), style = "text-align: center")
       )
     )
   )
