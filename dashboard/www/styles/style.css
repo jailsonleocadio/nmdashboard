@@ -32,7 +32,20 @@ body { font-family: Verdana; }
 .bg-teal { background-color: #cc8b39!important; }
 
 .valuesbox, .shiny-html-output {
-  padding-left: 0;
+  padding: 0px 8px 0px 13px
 }
 
 .nav-tabs-custom { box-shadow: none; }
+
+#infomations {
+  width: 100%;
+  text-align: center;
+}
+
+#infomations img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto
+}
+
+

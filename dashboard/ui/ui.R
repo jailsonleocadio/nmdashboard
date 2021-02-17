@@ -29,18 +29,23 @@ ui = fluidPage(
     
     dashboardBody(
       fluidRow(
-        column(4,
+        column(3,
                HTML(
                  paste0(
+                   "<div id='infomations'>",
                    "<br>",
-                   "<img style = 'display: block;' src='images/beekeep.jpeg' width = '100'>",
+                   "<img style = 'display: block; .clearfix {overflow: auto;' src='images/beekeep.jpeg' width = '80'>",
                    "<br>",
-                   "<p style = 'text-align: center;'><small>Nest Monitoring Dashboard</small></p>",
-                   "<br>"
+                   textOutput("totalObservations"),
+                   textOutput("totalScientistis"),
+                   textOutput("totalBees"),
+                   textOutput("totalPollen"),
+                   textOutput("totalNests"),
+                   "</div>"
                    )
                  )
                ),
-        column(8, class=c("valuesbox"),
+        column(9, class=c("valuesbox"),
                valueBoxOutput("numberOfFilteredObservations", width = 3),
                valueBoxOutput("numberOfFilteredScientists", width = 3),
                valueBoxOutput("numberOfFilteredBees", width = 3),
@@ -73,7 +78,10 @@ ui = fluidPage(
         ),
         box(width = 4,
           column(12,
-               textInput("email", "Para ver as suas contribuições em destaque, digite o seu e-mail abaixo:")
+               textInput("email", "Para ver as suas contribuições em destaque, digite o seu e-mail abaixo:"),
+               textOutput("totalUserObservations"),
+               textOutput("dateFirstObservation"),
+               textOutput("dateLastObservation")
           )
         )
       ),

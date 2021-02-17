@@ -29,10 +29,29 @@ server = function(input, output) {
     if (trimws(input$email) != "") {
       rv$dt_user = rv$dt_species
       rv$dt_user = rv$dt_user[rv$dt_user$Email==trimws(input$email),]
-      print(nrow(rv$dt_user))
     }
   })
   
+  ###
+  
+  output$totalObservations = renderText({paste("Observações:", nrow(data))})
+  output$totalScientistis = renderText({paste("Cientistas cidadãos:", length(unique(data$Email)))})
+  output$totalBees = renderText({paste("Abelhas em atividade:", sum(data$Saida, data$Entrada))})
+  output$totalPollen = renderText({paste("Pólens:", sum(data$Polen))})
+  output$totalNests = renderText({paste("Ninhos:", nrow(unique(data.frame(data$Email, data$IdentificadorNinho))))})
+  
+  output$totalUserObservations = renderText(if (!is.null(rv$dt_user)) {
+    if (nrow(rv$dt_user)>0) {paste("Total das suas observações:", nrow(rv$dt_user))}
+  } else {""})
+  
+  output$dateFirstObservation = renderText(if (!is.null(rv$dt_user)) {
+    if (nrow(rv$dt_user)>0) {paste("Primeira observação:", format(min(as.Date(rv$dt_user$DataRegistro)), "%d de %b de %Y"))}
+  } else {""})
+  
+  output$dateLastObservation = renderText(if (!is.null(rv$dt_user)) {
+    if (nrow(rv$dt_user)>0) {paste("Última observação:", format(max(as.Date(rv$dt_user$DataRegistro)), "%d de %b de %Y"))}
+  } else {""})
+
   ###
   
   output$numberOfFilteredObservations = renderValueBox({
