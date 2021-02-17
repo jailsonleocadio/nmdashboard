@@ -130,7 +130,7 @@ server = function(input, output) {
                 name = 'Sua contribuição :)',
                 mode = 'markers',
                 marker = list(size = 10,
-                              color = 'yellow'))
+                              color = '#FF8C00'))
     
     fig = fig %>%
       add_trace(x = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean)$Group.1,
@@ -166,7 +166,7 @@ server = function(input, output) {
                 name = "Sua contribuição :)",
                 mode = 'markers',
                 marker = list(size = 10,
-                              color = 'Yellow'))
+                              color = '#FF8C00'))
     
     fig = fig %>%
       add_trace(x = aggregate(rv$dt_species$atividade, by=list(floor(rv$dt_species$Temperatura)), mean)$Group.1,
