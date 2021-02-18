@@ -1,29 +1,29 @@
 server = function(input, output) {
-  rv = reactiveValues(dt_species = data)
+  rv = reactiveValues(data = data.old)
   
   observeEvent(c(input$species, input$temperature, input$weather, input$area, input$dates, input$experience, input$email), {
-    rv$dt_species = data
+    rv$data = data.old
     
     if (!is.null(input$species)) {
       if (!"Todas" %in% input$species) {
-        rv$dt_species = rv$dt_species[rv$dt_species$Especie %in% input$species,]
+        rv$data = rv$data[rv$data$species %in% input$species,]
       }
     }
     
-    rv$dt_species = rv$dt_species[rv$dt_species$Temperatura >= input$temperature[1] & rv$dt_species$Temperatura <= input$temperature[2],]
+    rv$data = rv$data[rv$data$temperature >= input$temperature[1] & rv$data$temperature <= input$temperature[2],]
     
     if (input$weather != "Todas") {
-      rv$dt_species = rv$dt_species[rv$dt_species$CondicaoCeu==input$weather,]
+      rv$data = rv$data[rv$data$weather == input$weather,]
     }
     
     if (input$area != "Todas") {
-      rv$dt_species = rv$dt_species[rv$dt_species$AreaClass==input$area,]
+      rv$data = rv$data[rv$data$area==input$area,]
     }
     
-    rv$dt_species = rv$dt_species[as.Date(rv$dt_species$DataRegistro) >= as.Date(input$dates[1]) & as.Date(rv$dt_species$DataRegistro) <= as.Date(input$dates[2]),]
+    rv$data = rv$data[as.Date(rv$data$date.register) >= as.Date(input$dates[1]) & as.Date(rv$data$date.register) <= as.Date(input$dates[2]),]
     
     if (input$experience != "Todas") {
-      rv$dt_species = rv$dt_species[rv$dt_species$Experiencia==input$experience,]
+      rv$data = rv$data[rv$data$experience == input$experience,]
     }
   })
   
@@ -31,7 +31,7 @@ server = function(input, output) {
   
   output$numberOfFilteredObservations = renderValueBox({
     valueBox(
-      nrow(rv$dt_species),
+      nrow(rv$data),
       "Contribuições",
       icon = icon("list"),
       color = "teal"
@@ -40,7 +40,7 @@ server = function(input, output) {
   
   output$numberOfFilteredScientists = renderValueBox({
     valueBox(
-      length(unique(rv$dt_species$Email)),
+      length(unique(rv$data$email)),
       "Cientistas cidadãos",
       icon = icon("users"),
       color = "teal",
@@ -49,7 +49,7 @@ server = function(input, output) {
   
   output$numberOfFilteredBees = renderValueBox({
     valueBox(
-      sum(rv$dt_species$Saida + rv$dt_species$Entrada),
+      sum(rv$data$exit + rv$data$entrance),
       "Abelhas em atividade",
       icon = icon("forumbee"),
       color = "teal",
@@ -58,7 +58,7 @@ server = function(input, output) {
   
   output$numberOfFilteredPolen = renderValueBox({
     valueBox(
-      sum(rv$dt_species$Polen),
+      sum(rv$data$pollen),
       "Com pólen",
       icon = icon("spa"),
       color = "teal",
@@ -67,7 +67,7 @@ server = function(input, output) {
   
   output$meanOfBees = renderValueBox({
     valueBox(
-      round(mean(rv$dt_species$atividade), 1),
+      round(mean(rv$data$activity), 1),
       "Média de atividade",
       icon = icon("forumbee"),
       color = "teal",
@@ -76,7 +76,7 @@ server = function(input, output) {
   
   output$rateOfEntranceExit = renderValueBox({
     valueBox(
-      paste(round((sum(rv$dt_species$Entrada)/sum(rv$dt_species$Saida, rv$dt_species$Entrada) * 100), 1), "%"),
+      paste(round((sum(rv$data$entrance)/sum(rv$data$exit, rv$data$entrance) * 100), 1), "%"),
       "Entrada/Atividade",
       icon = icon("forumbee"),
       color = "teal",
@@ -85,7 +85,7 @@ server = function(input, output) {
   
   output$rateOfPolen = renderValueBox({
     valueBox(
-      paste(round((sum(rv$dt_species$Polen)/sum(rv$dt_species$Entrada, rv$dt_species$Polen) * 100), 1), "%"),
+      paste(round((sum(rv$data$pollen)/sum(rv$data$entrance, rv$data$pollen) * 100), 1), "%"),
       "Pólen/Entrada",
       icon = icon("spa"),
       color = "teal",
@@ -94,7 +94,7 @@ server = function(input, output) {
   
   output$meanOfTemperature = renderValueBox({
     valueBox(
-      paste(round(mean(rv$dt_species$Temperatura), 1), " ºC"),
+      paste(round(mean(rv$data$temperature), 1), " ºC"),
       "Média de temperatura",
       icon = icon("thermometer-three-quarters"),
       color = "teal",
@@ -106,19 +106,19 @@ server = function(input, output) {
   output$plot1 = renderPlotly({
     fig = plot_ly(type = "scatter")
     fig = fig %>%
-      add_trace(data = rv$dt_species,
-                x = ~registro.hora, y = ~atividade,
-                text = ~paste("Espécie: ", Especie, '<br>Saídas: ', Saida, '<br>Entradas: ',
-                              Entrada, '<br>Temperatura: ', Temperatura, '<br>Condição do céu: ',
-                              CondicaoCeu, '<br>Área: ', AreaClass),
+      add_trace(data = rv$data,
+                x = ~hour.register, y = ~activity,
+                text = ~paste("Espécie: ", species, '<br>Saídas: ', exit, '<br>Entradas: ',
+                              entrance, '<br>Temperatura: ', temperature, '<br>Condição do céu: ',
+                              weather, '<br>Área: ', area),
                 name = 'Contribuição',
                 mode = 'markers',
                 marker = list(size = 10,
                               color = '#2c74b4'))
     
     fig = fig %>%
-      add_trace(x = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean)$Group.1,
-                y = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$registro.hora), mean)$x,
+      add_trace(x = aggregate(rv$data$activity, by=list(rv$data$hour.register), mean)$Group.1,
+                y = aggregate(rv$data$activity, by=list(rv$data$hour.register), mean)$x,
                 name = 'Média de atividade',
                 mode = 'lines',
                 line = list(color = 'red'))
@@ -132,19 +132,19 @@ server = function(input, output) {
   output$plot2 = renderPlotly({
     fig = plot_ly(type = "scatter")
     fig = fig %>%
-      add_trace(data = rv$dt_species,
-                x = ~Temperatura, y = ~atividade,
-                text = ~paste("Espécie: ", Especie, '<br>Saídas: ', Saida, '<br>Entradas: ',
-                              Entrada, '<br>Temperatura: ', Temperatura, '<br>Condição do céu: ',
-                              CondicaoCeu, '<br>Área: ', AreaClass),
+      add_trace(data = rv$data,
+                x = ~temperature, y = ~activity,
+                text = ~paste("Espécie: ", species, '<br>Saídas: ', exit, '<br>Entradas: ',
+                              entrance, '<br>Temperatura: ', temperature, '<br>Condição do céu: ',
+                              weather, '<br>Área: ', area),
                 name = "Contribuição",
                 mode = 'markers',
                 marker = list(size = 10,
                               color = '#2c74b4'))
     
     fig = fig %>%
-      add_trace(x = aggregate(rv$dt_species$atividade, by=list(floor(rv$dt_species$Temperatura)), mean)$Group.1,
-                y = aggregate(rv$dt_species$atividade, by=list(floor(rv$dt_species$Temperatura)), mean)$x,
+      add_trace(x = aggregate(rv$data$activity, by=list(floor(rv$data$temperature)), mean)$Group.1,
+                y = aggregate(rv$data$activity, by=list(floor(rv$data$temperature)), mean)$x,
                 name = 'Média de atividade',
                 mode = 'lines',
                 line = list(color = 'red'))
@@ -155,7 +155,7 @@ server = function(input, output) {
   })
   
   output$plot3 = renderPlotly({
-    agg = aggregate(rv$dt_species$atividade, by=list(rv$dt_species$CondicaoCeu), mean)
+    agg = aggregate(rv$data$activity, by=list(rv$data$weather), mean)
     df = data.frame(agg$Group.1, agg$x)
     df$agg.Group.1 = factor(df$agg.Group.1, levels = df[["agg.Group.1"]])
 
@@ -167,8 +167,8 @@ server = function(input, output) {
   })
   
   output$plot4 = renderPlotly({
-    agg1 = aggregate(rv$dt_species$Entrada, by=list(rv$dt_species$registro.hora), mean)
-    agg2 = aggregate(rv$dt_species$Polen, by=list(rv$dt_species$registro.hora), mean)
+    agg1 = aggregate(rv$data$entrance, by=list(rv$data$hour.register), mean)
+    agg2 = aggregate(rv$data$pollen, by=list(rv$data$hour.register), mean)
     
     fig = plot_ly(x = agg1$Group.1, y = agg1$x, type = 'bar', name = 'Entrada',
                   text = round(agg1$x, 1), textposition = 'auto')
@@ -181,25 +181,25 @@ server = function(input, output) {
   output$map = renderLeaflet({
     palette = colorFactor(
       palette = c("#66C2A5", "#FC8D62", "#8DA0CB"),
-      domain = rv$dt_species$AreaClass
+      domain = rv$data$area
   )
     
-  leaflet(rv$dt_species) %>%
+  leaflet(rv$data) %>%
     setView(lng = -55, lat = -12, zoom = 3) %>%
     addTiles() %>%
-    addCircles(data = rv$dt_species,
-               lat = ~ Latitude_r,
-               lng = ~ Longitude_r,
+    addCircles(data = rv$data,
+               lat = ~ random.latitude,
+               lng = ~ random.longitude,
                radius = 10000,
                weight = 10,
-               color =  ~palette(AreaClass),
-               popup = paste("<b> Espécie:</b> ", rv$dt_species$Especie, "<br/>",
-                             "<b> Saídas:</b> ", rv$dt_species$Saida, "<br/>",
-                             "<b> Entradas:</b> ", rv$dt_species$Entrada, "<br/>",
-                             "<b> Temperatura:</b> ", rv$dt_species$Temperatura, "ºC <br/>",
-                             "<b> Condição do céu:</b> ", rv$dt_species$CondicaoCeu, "<br/>",
-                             "<b> Área:</b> ", rv$dt_species$AreaClass, "<br/>")) %>%
-    addLegend("bottomright", pal = palette, values = ~AreaClass,
+               color =  ~palette(area),
+               popup = paste("<b> Espécie:</b> ", rv$data$species, "<br/>",
+                             "<b> Saídas:</b> ", rv$data$exit, "<br/>",
+                             "<b> Entradas:</b> ", rv$data$entrance, "<br/>",
+                             "<b> Temperatura:</b> ", rv$data$temperature, "ºC <br/>",
+                             "<b> Condição do céu:</b> ", rv$data$weather, "<br/>",
+                             "<b> Área:</b> ", rv$data$area, "<br/>")) %>%
+    addLegend("bottomright", pal = palette, values = ~area,
               title = "Área",
               opacity = 1
     )

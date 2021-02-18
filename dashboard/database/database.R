@@ -1,27 +1,27 @@
-data = read.csv("database/data.csv", header=TRUE, sep=",")
+data.old = read.csv("database/data_old.csv", header=TRUE, sep=",")
 
-data$DataCriacao = as.POSIXct(strptime(data$DataCriacao,"%Y-%m-%d %H:%M:%S", tz=""))
-data$Email = as.character(data$Email)
-data$DataRegistro = as.POSIXct(strptime(data$DataRegistro,"%Y-%m-%d %H:%M:%S", tz=""))
-data$Temperatura = as.numeric(data$Temperatura)
-data$Experiencia = as.factor(data$Experiencia)
-data$Especie = as.factor(data$Especie)
-data$FezCurso = as.factor(data$FezCurso)
+data.old$date.observation = as.POSIXct(strptime(data.old$date.observation,"%Y-%m-%d %H:%M:%S", tz=""))
+data.old$email = as.character(data.old$email)
+data.old$date.register = as.POSIXct(strptime(data.old$date.register,"%Y-%m-%d %H:%M:%S", tz=""))
+data.old$temperature = as.numeric(data.old$temperature)
+data.old$experience = as.factor(data.old$experience)
+data.old$species = as.factor(data.old$species)
+data.old$course = as.factor(data.old$course)
 
-data$CondicaoCeu = as.factor(data$CondicaoCeu)
-data$CondicaoCeu = factor(data$CondicaoCeu, levels = c("Chuva fraca", "Coberto por nuvens de chuva/nublado", "Parcialmente coberto por nuvens", "Céu aberto sem nuvens"))
+data.old$weather = as.factor(data.old$weather)
+data.old$weather = factor(data.old$weather, levels = c("Chuva fraca", "Coberto por nuvens de chuva/nublado", "Parcialmente coberto por nuvens", "Céu aberto sem nuvens"))
 
-data$IdentificadorNinho = as.character(data$IdentificadorNinho)
-data$AreaClass = as.factor(data$AreaClass)
-data$Saida = as.numeric(data$Saida)
-data$Entrada = as.numeric(data$Entrada)
-data$Polen = as.numeric(data$Polen)
-data$Latidute =  as.numeric(data$Latidute)
-data$Longitude = as.numeric(data$Longitude)
-data$ArquivoVideo = as.character(data$ArquivoVideo)
+data.old$nest = as.character(data.old$nest)
+data.old$area = as.factor(data.old$area)
+data.old$exit = as.numeric(data.old$exit)
+data.old$entrance = as.numeric(data.old$entrance)
+data.old$pollen = as.numeric(data.old$pollen)
+data.old$latitude =  as.numeric(data.old$latitude)
+data.old$longitude = as.numeric(data.old$longitude)
+data.old$filename = as.character(data.old$filename)
 
-data$atividade = data$Saida + data$Entrada
-data$registro.hora = as.numeric(format(as.POSIXct(strptime(data$DataRegistro,"%Y-%m-%d %H:%M:%S",tz="")), format = "%H"))
+data.old$activity = data.old$exit + data.old$entrance
+data.old$hour.register = as.numeric(format(as.POSIXct(strptime(data.old$date.register,"%Y-%m-%d %H:%M:%S",tz="")), format = "%H"))
 
 ###
 
@@ -29,8 +29,8 @@ source("functions/random.coordinate.R")
 
 set.seed(2468)
 
-dt = as.data.frame(t(mapply(random.coordinate, data$Latidute, data$Longitude)))
-colnames(dt) = c("Latitude_r", "Longitude_r")
-data = cbind(data, dt)
+dt = as.data.frame(t(mapply(random.coordinate, data.old$latitude, data.old$longitude)))
+colnames(dt) = c("random.latitude", "random.longitude")
+data.old = cbind(data.old, dt)
 
 remove(dt)
