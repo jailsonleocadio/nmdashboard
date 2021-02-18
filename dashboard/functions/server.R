@@ -1,8 +1,8 @@
 server = function(input, output) {
-  rv = reactiveValues(data = data.old)
+  rv = reactiveValues(data = data)
   
-  observeEvent(c(input$species, input$temperature, input$weather, input$area, input$dates, input$experience, input$email), {
-    rv$data = data.old
+  observeEvent(c(input$species, input$temperature, input$weather, input$area, input$dates, input$nest.type), {
+    rv$data = data
     
     if (!is.null(input$species)) {
       if (!"Todas" %in% input$species) {
@@ -20,10 +20,10 @@ server = function(input, output) {
       rv$data = rv$data[rv$data$area==input$area,]
     }
     
-    rv$data = rv$data[as.Date(rv$data$date.register) >= as.Date(input$dates[1]) & as.Date(rv$data$date.register) <= as.Date(input$dates[2]),]
+    rv$data = rv$data[as.Date(rv$data$date.observation) >= as.Date(input$dates[1]) & as.Date(rv$data$date.observation) <= as.Date(input$dates[2]),]
     
-    if (input$experience != "Todas") {
-      rv$data = rv$data[rv$data$experience == input$experience,]
+    if (input$nest.type != "Todos") {
+      rv$data = rv$data[rv$data$nest.type == input$nest.type & !is.na(rv$data$nest.type),]
     }
   })
   
@@ -58,7 +58,7 @@ server = function(input, output) {
   
   output$numberOfFilteredPolen = renderValueBox({
     valueBox(
-      sum(rv$data$pollen),
+      sum(rv$data[rv$data$invalid.pollen==FALSE, c('pollen')]),
       "Com pólen",
       icon = icon("spa"),
       color = "teal",
@@ -85,7 +85,7 @@ server = function(input, output) {
   
   output$rateOfPolen = renderValueBox({
     valueBox(
-      paste(round((sum(rv$data$pollen)/sum(rv$data$entrance, rv$data$pollen) * 100), 1), "%"),
+      paste(round((sum(rv$data[rv$data$invalid.pollen==FALSE, c('pollen')])/sum(rv$data$entrance, rv$data[rv$data$invalid.pollen==FALSE, c('pollen')]) * 100), 1), "%"),
       "Pólen/Entrada",
       icon = icon("spa"),
       color = "teal",
@@ -107,7 +107,7 @@ server = function(input, output) {
     fig = plot_ly(type = "scatter")
     fig = fig %>%
       add_trace(data = rv$data,
-                x = ~hour.register, y = ~activity,
+                x = ~hour.observation, y = ~activity,
                 text = ~paste("Espécie: ", species, '<br>Saídas: ', exit, '<br>Entradas: ',
                               entrance, '<br>Temperatura: ', temperature, '<br>Condição do céu: ',
                               weather, '<br>Área: ', area),
@@ -117,8 +117,8 @@ server = function(input, output) {
                               color = '#2c74b4'))
     
     fig = fig %>%
-      add_trace(x = aggregate(rv$data$activity, by=list(rv$data$hour.register), mean)$Group.1,
-                y = aggregate(rv$data$activity, by=list(rv$data$hour.register), mean)$x,
+      add_trace(x = aggregate(rv$data$activity, by=list(rv$data$hour.observation), mean)$Group.1,
+                y = aggregate(rv$data$activity, by=list(rv$data$hour.observation), mean)$x,
                 name = 'Média de atividade',
                 mode = 'lines',
                 line = list(color = 'red'))
@@ -167,8 +167,8 @@ server = function(input, output) {
   })
   
   output$plot4 = renderPlotly({
-    agg1 = aggregate(rv$data$entrance, by=list(rv$data$hour.register), mean)
-    agg2 = aggregate(rv$data$pollen, by=list(rv$data$hour.register), mean)
+    agg1 = aggregate(rv$data[rv$data$invalid.pollen==FALSE, c('entrance')], by=list(rv$data[rv$data$invalid.pollen==FALSE, c('hour.observation')]), mean)
+    agg2 = aggregate(rv$data[rv$data$invalid.pollen==FALSE, c('pollen')], by=list(rv$data[rv$data$invalid.pollen==FALSE, c('hour.observation')]), mean)
     
     fig = plot_ly(x = agg1$Group.1, y = agg1$x, type = 'bar', name = 'Entrada',
                   text = round(agg1$x, 1), textposition = 'auto')

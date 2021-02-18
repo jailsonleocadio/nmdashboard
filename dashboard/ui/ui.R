@@ -36,6 +36,7 @@ ui = fluidPage(
                    "<br>",
                    "<img style = 'display: block; .clearfix {overflow: auto;' src='images/beekeep.jpeg' width = '110'>",
                    "<br>",
+                   "<p>Resultado do protocolo de monitoramento de Ninhos de Abelhas. Para contribuir, acesse: <a href='https://beekeep.pcs.usp.br'>beekeep.pcs.usp.br</a></p>",
                    "</div>"
                    )
                  )
@@ -55,20 +56,20 @@ ui = fluidPage(
       fluidRow(class=c("colorbox"),
         box(width = 12,
           column(4,
-            selectInput("species", "Espécie:", c("Todas", unique(as.character(data$Especie[order(data$Especie)]))), multiple = TRUE),
+            selectInput("species", "Espécie:", c("Todas", str_sort(unique(as.character(data$species)))), multiple = TRUE),
             sliderInput("temperature",
                         "Temperatura:",
-                        min=floor(min(data$Temperatura)),
-                        max=ceiling(max(data$Temperatura)),
-                        value=c(floor(min(data$Temperatura)), ceiling(max(data$Temperatura))),
+                        min=floor(min(data$temperature)),
+                        max=ceiling(max(data$temperature)),
+                        value=c(floor(min(data$temperature)), ceiling(max(data$temperature))),
                         step = 0.5),
                     ),
           column(4,
-                 selectInput("weather", "Condição do céu:", c("Todas", unique(as.character(data$CondicaoCeu[order(data$CondicaoCeu)])))),
-                 selectInput("area", "Área:", c("Todas", unique(as.character(data$AreaClass[order(data$AreaClass)]))))        ),
+                 selectInput("weather", "Condição do céu:", c("Todas", str_sort(unique(as.character(data$weather))))),
+                 selectInput("area", "Área:", c("Todas", unique(as.character(data$area[order(data$area)]))))        ),
           column(4,
                  dateRangeInput("dates", "Período:", start = as.Date("2020-07-23"), end = Sys.Date(), separator = "até", format = "dd-mm-yyyy"),
-                 selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
+                 selectInput("nest.type", "Tipo de ninho:", c("Todos", str_sort(unique(as.character(data$nest.type[!is.na(data$nest.type)])))))
           ),
         ),
       ),

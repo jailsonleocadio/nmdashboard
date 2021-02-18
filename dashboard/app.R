@@ -7,6 +7,8 @@ library(shinydashboard)
 library(leaflet)
 library(plotly)
 
+library(stringr)
+
 source("database/database.R")
 source("ui/ui.R")
 source("functions/server.R")
