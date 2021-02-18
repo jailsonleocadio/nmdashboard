@@ -34,13 +34,8 @@ ui = fluidPage(
                  paste0(
                    "<div id='infomations'>",
                    "<br>",
-                   "<img style = 'display: block; .clearfix {overflow: auto;' src='images/beekeep.jpeg' width = '80'>",
+                   "<img style = 'display: block; .clearfix {overflow: auto;' src='images/beekeep.jpeg' width = '110'>",
                    "<br>",
-                   textOutput("totalObservations"),
-                   textOutput("totalScientistis"),
-                   textOutput("totalBees"),
-                   textOutput("totalPollen"),
-                   textOutput("totalNests"),
                    "</div>"
                    )
                  )
@@ -58,7 +53,7 @@ ui = fluidPage(
         ),
       
       fluidRow(class=c("colorbox"),
-        box(width = 8,
+        box(width = 12,
           column(4,
             selectInput("species", "Espécie:", c("Todas", unique(as.character(data$Especie[order(data$Especie)]))), multiple = TRUE),
             sliderInput("temperature",
@@ -76,14 +71,6 @@ ui = fluidPage(
                  selectInput("experience", "Experiência:", c("Todas", unique(as.character(data$Experiencia[order(data$Experiencia)]))))
           ),
         ),
-        box(width = 4,
-          column(12,
-               textInput("email", "Para ver as suas contribuições em destaque, digite o seu e-mail abaixo:"),
-               textOutput("totalUserObservations"),
-               textOutput("dateFirstObservation"),
-               textOutput("dateLastObservation")
-          )
-        )
       ),
         
       fluidRow(
@@ -97,16 +84,6 @@ ui = fluidPage(
         
       fluidRow(
         box(leafletOutput(outputId = "map"), width = 12)
-      ),
-      
-      fluidRow(
-        column(4,
-               
-        )
-      ),
-      
-      fluidRow(
-        div(actionButton("about", "Sobre"), style = "text-align: center")
       )
     )
   )
