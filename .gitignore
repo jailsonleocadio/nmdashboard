@@ -1,2 +1,4 @@
 .DS_Store
-dashboard/database/data.csv
+dashboard/database/data_old.csv
+dashboard/database/counts.csv
+dashboard/database/videos.csv
