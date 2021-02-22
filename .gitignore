@@ -1,4 +1,5 @@
 .DS_Store
-dashboard/database/data_old.csv
-dashboard/database/counts.csv
-dashboard/database/videos.csv
+Rprofile.site
+database/data_old.csv
+database/counts.csv
+database/videos.csv

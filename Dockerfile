@@ -1,11 +1,21 @@
-FROM openjdk:8-jre
+FROM openanalytics/r-base
 
-RUN mkdir -p /opt/shinyproxy/
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  libcurl4-gnutls-dev \
+  libxml2-dev \
+  libssl-dev
 
-RUN wget https://www.shinyproxy.io/downloads/shinyproxy-2.4.3.jar -O /opt/shinyproxy/shinyproxy.jar
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'leaflet', 'ggplot2', 'devtools', 'dplyr', 'stringr'), repos='https://cloud.r-project.org/')"
 
-COPY application.yml /opt/shinyproxy/application.yml
+RUN R -e "devtools::install_github('ropensci/plotly')"
 
-WORKDIR /opt/shinyproxy/
+RUN mkdir /root/app
 
-CMD ["java", "-jar", "/opt/shinyproxy/shinyproxy.jar"]
+COPY . /root/app
+
+COPY Rprofile.site /usr/lib/R/etc/
+
+EXPOSE 3838
+
+CMD ["R", "-e", "shiny::runApp('/root/app')"]
