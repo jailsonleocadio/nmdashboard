@@ -1,8 +1,8 @@
 data.old = read.csv("database/data_old.csv", header=TRUE, sep=",")
 
-data.old$date.observation = as.POSIXct(strptime(data.old$date.observation, "%Y-%m-%d %H:%M:%S", tz=""))
+data.old$date.observation = as.POSIXct(strptime(data.old$date.observation, "%Y-%m-%d %H:%M:%S", tz="UTC"))
 data.old$email = as.character(data.old$email)
-data.old$date.register = as.POSIXct(strptime(data.old$date.register, "%Y-%m-%d %H:%M:%S", tz=""))
+data.old$date.register = as.POSIXct(strptime(data.old$date.register, "%Y-%m-%d %H:%M:%S", tz="UTC"))
 data.old$temperature = as.numeric(data.old$temperature)
 data.old$experience = as.factor(data.old$experience)
 data.old$species = as.factor(data.old$species)
@@ -43,8 +43,8 @@ counts$invalid.pollen = as.factor(counts$invalid.pollen)
 videos = read.csv("database/videos.csv", header=TRUE, sep=",")
 
 videos$id.video = as.factor(videos$id.video)
-videos$date.register = as.POSIXct(strptime(videos$date.register, "%Y-%m-%d %H:%M:%S", tz=""))
-videos$date.observation = as.POSIXct(strptime(videos$date.observation, "%Y-%m-%d %H:%M:%S", tz=""))
+videos$date.register = as.POSIXct(strptime(videos$date.register, "%Y-%m-%d %H:%M:%S", tz="UTC"))
+videos$date.observation = as.POSIXct(strptime(videos$date.observation, "%Y-%m-%d %H:%M:%S", tz="UTC"))
 
 videos$email = trimws(videos$email)
 videos$email =  as.character(videos$email)
@@ -93,7 +93,8 @@ data = full_join(data, data.old)
 ###########################################
 
 data$activity = data$exit + data$entrance
-data$hour.observation = as.numeric(format(as.POSIXct(strptime(data$date.observation,"%Y-%m-%d %H:%M:%S",tz="")), format = "%H"))
+data$hour.observation = as.numeric(format(as.POSIXct(strptime(data$date.observation,"%Y-%m-%d %H:%M:%S",tz="UTC")), format = "%H"))
+data$hour.observation = data$hour.observation - 3
 
 ###
 
