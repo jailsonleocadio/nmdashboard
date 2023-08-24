@@ -2,9 +2,10 @@
 # jailsonleocadio@gmail.com
 # Beekeep team (http://beekeep.life)
 
+
 library(shiny)
 library(shinydashboard)
-library(leaflet)
+#library(leaflet)
 library(plotly)
 
 library(stringr)

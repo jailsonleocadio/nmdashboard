@@ -178,30 +178,31 @@ server = function(input, output) {
       layout(yaxis = list(title = 'Média de Entradas'))
   })
   
-  output$map = renderLeaflet({
-    palette = colorFactor(
-      palette = c("#66C2A5", "#FC8D62", "#8DA0CB"),
-      domain = rv$data$area
-  )
-    
-  leaflet(rv$data) %>%
-    setView(lng = -55, lat = -12, zoom = 3) %>%
-    addTiles() %>%
-    addCircles(data = rv$data,
-               lat = ~ random.latitude,
-               lng = ~ random.longitude,
-               radius = 10000,
-               weight = 10,
-               color =  ~palette(area),
-               popup = paste("<b> Espécie:</b> ", rv$data$species, "<br/>",
-                             "<b> Saídas:</b> ", rv$data$exit, "<br/>",
-                             "<b> Entradas:</b> ", rv$data$entrance, "<br/>",
-                             "<b> Temperatura:</b> ", rv$data$temperature, "ºC <br/>",
-                             "<b> Condição do céu:</b> ", rv$data$weather, "<br/>",
-                             "<b> Área:</b> ", rv$data$area, "<br/>")) %>%
-    addLegend("bottomright", pal = palette, values = ~area,
-              title = "Área",
-              opacity = 1
-    )
-  })
+
+  #output$map = renderLeaflet({
+  #  palette = colorFactor(
+  #    palette = c("#66C2A5", "#FC8D62", "#8DA0CB"),
+  #    domain = rv$data$area
+  #)
+  #  
+  #leaflet(rv$data) %>%
+  #  setView(lng = -55, lat = -12, zoom = 3) %>%
+  #  addTiles() %>%
+  #  addCircles(data = rv$data,
+  #             lat = ~ random.latitude,
+  #             lng = ~ random.longitude,
+  #             radius = 10000,
+  #             weight = 10,
+  #             color =  ~palette(area),
+  #             popup = paste("<b> Espécie:</b> ", rv$data$species, "<br/>",
+  #                           "<b> Saídas:</b> ", rv$data$exit, "<br/>",
+  #                           "<b> Entradas:</b> ", rv$data$entrance, "<br/>",
+  #                           "<b> Temperatura:</b> ", rv$data$temperature, "ºC <br/>",
+  #                           "<b> Condição do céu:</b> ", rv$data$weather, "<br/>",
+  #                           "<b> Área:</b> ", rv$data$area, "<br/>")) %>%
+  #  addLegend("bottomright", pal = palette, values = ~area,
+  #            title = "Área",
+  #            opacity = 1
+  #  )
+  #})
 }

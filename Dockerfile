@@ -1,4 +1,4 @@
-FROM openanalytics/r-base
+FROM r-base
 
 RUN apt-get update && apt-get install -y \
   build-essential \
@@ -6,15 +6,16 @@ RUN apt-get update && apt-get install -y \
   libxml2-dev \
   libssl-dev
 
-RUN R -e "install.packages(c('shiny', 'shinydashboard', 'leaflet', 'ggplot2', 'devtools', 'dplyr', 'stringr'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'ggplot2', 'remotes', 'dplyr', 'stringr'), repos='https://cloud.r-project.org/')"
 
-RUN R -e "devtools::install_github('ropensci/plotly')"
+RUN R -e "remotes::install_github('plotly/plotly')"
+#RUN R -e "remotes::install_github('rstudio/leaflet')"
 
 RUN mkdir /root/app
 
 COPY . /root/app
 
-COPY Rprofile.site /usr/lib/R/etc/
+COPY Rprofile.site /usr/ib/R/etc/
 
 EXPOSE 3838
 

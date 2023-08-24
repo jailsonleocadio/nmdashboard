@@ -84,7 +84,7 @@ ui = fluidPage(
       ),
         
       fluidRow(
-        box(leafletOutput(outputId = "map"), width = 12)
+        #box(leafletOutput(outputId = "map"), width = 12)
       )
     )
   )
